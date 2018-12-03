@@ -7,6 +7,10 @@ For using [Loopback 3](https://loopback.io/) with [react-admin](https://github.c
 npm install --save react-admin-loopback
 ```
 
+## Prerequisite
+
+* Your loopback server must response `Content-Range` header when querying list. Please use [loopback-content-range](https://github.com/darthwesker/loopback-content-range) on your server end.
+
 ## Usage
 
 ```js
