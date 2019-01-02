@@ -1,6 +1,6 @@
 {
   "name": "react-admin-loopback",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Packages related to using Loopback with react-admin",
   "main": "lib/index.js",
   "scripts": {
