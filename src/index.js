@@ -46,10 +46,13 @@ export default (apiUrl, httpClient = fetchJson) => {
         url = `${apiUrl}/${resource}/${params.id}`;
         break;
       case GET_MANY: {
+        const listId = params.ids.map(id => {
+          return {id};
+        });
         const query = {
-          filter: JSON.stringify({ id: params.ids }),
+          where: {or: listId},
         };
-        url = `${apiUrl}/${resource}?${stringify(query)}`;
+        url = `${apiUrl}/${resource}?${stringify({filter: JSON.stringify(query)})}`;
         break;
       }
       case GET_MANY_REFERENCE: {
