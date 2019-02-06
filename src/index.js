@@ -31,6 +31,7 @@ export default (apiUrl, httpClient = fetchJson) => {
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
         const include = params.include;
+        const fields = params.fields;
         const query = {};
         query['where'] = {...params.filter};
         if (field) query['order'] = [field + ' ' + order];
@@ -39,6 +40,7 @@ export default (apiUrl, httpClient = fetchJson) => {
           if (page >= 0) query['offset'] = (page - 1) * perPage;
         }
         if (include) query['include'] = include;
+        if (fields) query['fields'] = fields;
         url = `${apiUrl}/${resource}?${stringify({filter: JSON.stringify(query)})}`;
         break;
       }
@@ -59,6 +61,7 @@ export default (apiUrl, httpClient = fetchJson) => {
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
         const include = params.include;
+        const fields = params.fields;
         const query = {};
         query['where'] = {...params.filter};
         query['where'][params.target] = params.id;
@@ -68,6 +71,7 @@ export default (apiUrl, httpClient = fetchJson) => {
           if (page >= 0) query['skip'] = (page - 1) * perPage;
         }
         if (include) query['include'] = include;
+        if (fields) query['fields'] = fields;
         url = `${apiUrl}/${resource}?${stringify({filter: JSON.stringify(query)})}`;
         break;
       }
