@@ -41,6 +41,6 @@ export const authProvider = (loginApiUrl, noAccessPage = '/login') => {
         return Promise.reject({ redirectTo: noAccessPage });
       }
     }
-    return Promise.reject('Unkown method');
+    return Promise.reject('Unknown method');
   };
 };
