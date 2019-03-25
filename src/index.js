@@ -51,10 +51,15 @@ export default (apiUrl, httpClient = fetchJson) => {
         const listId = params.ids.map(id => {
           return {id};
         });
-        const query = {
-          where: {or: listId},
-        };
-        url = `${apiUrl}/${resource}?${stringify({filter: JSON.stringify(query)})}`;
+
+        let query = '';
+        if (listId.length > 0) {
+          const filter = {
+            where: {or: listId},
+          };
+          query = `?${stringify({filter: JSON.stringify(filter)})}`;
+        }
+        url = `${apiUrl}/${resource}${query}`;
         break;
       }
       case GET_MANY_REFERENCE: {
