@@ -48,6 +48,7 @@ export default (apiUrl, httpClient = fetchJson) => {
         url = `${apiUrl}/${resource}/${params.id}`;
         break;
       case GET_MANY: {
+        if (params.ids.length === 0) return { url: null }
         const listId = params.ids.map(id => {
           return {id};
         });
@@ -169,7 +170,11 @@ export default (apiUrl, httpClient = fetchJson) => {
       resource,
       params
     );
-    
+    if (url === null) {
+      return new Promise((resolve, reject) =>
+        resolve({ data: [] })
+      );
+    }
     return httpClient(url, options).then(response =>
         convertHTTPResponse(response, type, resource, params)
     );
