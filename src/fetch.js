@@ -5,6 +5,6 @@ export default (url, options = {}) => {
   options.user = {
       authenticated: true,
       token: storage.load('lbtoken').id
-  }
+  };
   return fetchUtils.fetchJson(url, options);
 }
