@@ -35,10 +35,8 @@ export default (apiUrl, httpClient = fetchJson) => {
         const query = {};
         query['where'] = {...params.filter};
         if (field) query['order'] = [field + ' ' + order];
-        if (perPage > 0) {
-          query['limit'] = perPage;
-          if (page >= 0) query['offset'] = (page - 1) * perPage;
-        }
+        if (perPage >= 0) query['limit'] = perPage;
+        if ((perPage > 0) && (page >= 0)) query['skip'] = (page - 1) * perPage;
         if (include) query['include'] = include;
         if (fields) query['fields'] = fields;
         url = `${apiUrl}/${resource}?${stringify({filter: JSON.stringify(query)})}`;
@@ -51,10 +49,15 @@ export default (apiUrl, httpClient = fetchJson) => {
         const listId = params.ids.map(id => {
           return {id};
         });
-        const query = {
-          where: {or: listId},
-        };
-        url = `${apiUrl}/${resource}?${stringify({filter: JSON.stringify(query)})}`;
+
+        let query = '';
+        if (listId.length > 0) {
+          const filter = {
+            where: {or: listId},
+          };
+          query = `?${stringify({filter: JSON.stringify(filter)})}`;
+        }
+        url = `${apiUrl}/${resource}${query}`;
         break;
       }
       case GET_MANY_REFERENCE: {
@@ -66,10 +69,8 @@ export default (apiUrl, httpClient = fetchJson) => {
         query['where'] = {...params.filter};
         query['where'][params.target] = params.id;
         if (field) query['order'] = [field + ' ' + order];
-        if (perPage > 0) {
-          query['limit'] = perPage;
-          if (page >= 0) query['skip'] = (page - 1) * perPage;
-        }
+        if (perPage >= 0) query['limit'] = perPage;
+        if ((perPage > 0) && (page >= 0)) query['skip'] = (page - 1) * perPage;
         if (include) query['include'] = include;
         if (fields) query['fields'] = fields;
         url = `${apiUrl}/${resource}?${stringify({filter: JSON.stringify(query)})}`;
