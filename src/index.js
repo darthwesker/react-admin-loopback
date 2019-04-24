@@ -26,19 +26,21 @@ export default (apiUrl, httpClient = fetchJson) => {
   const convertDataRequestToHTTP = (type, resource, params) => {
     let url = '';
     const options = {};
+    const specialParams = ['pagination', 'sort', 'filter'];
     switch (type) {
       case GET_LIST: {
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
-        const include = params.include;
-        const fields = params.fields;
         const query = {};
         query['where'] = {...params.filter};
         if (field) query['order'] = [field + ' ' + order];
         if (perPage >= 0) query['limit'] = perPage;
         if ((perPage > 0) && (page >= 0)) query['skip'] = (page - 1) * perPage;
-        if (include) query['include'] = include;
-        if (fields) query['fields'] = fields;
+
+        Object.keys(params).forEach(key => {
+          if (!specialParams.includes(key) && params[key] !== undefined)
+            query[key] = params[key];
+        });
         url = `${apiUrl}/${resource}?${stringify({filter: JSON.stringify(query)})}`;
         break;
       }
@@ -63,16 +65,18 @@ export default (apiUrl, httpClient = fetchJson) => {
       case GET_MANY_REFERENCE: {
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
-        const include = params.include;
-        const fields = params.fields;
         const query = {};
         query['where'] = {...params.filter};
         query['where'][params.target] = params.id;
         if (field) query['order'] = [field + ' ' + order];
         if (perPage >= 0) query['limit'] = perPage;
         if ((perPage > 0) && (page >= 0)) query['skip'] = (page - 1) * perPage;
-        if (include) query['include'] = include;
-        if (fields) query['fields'] = fields;
+
+        Object.keys(params).forEach(key => {
+          if (!specialParams.includes(key) && params[key] !== undefined)
+            query[key] = params[key];
+        });
+
         url = `${apiUrl}/${resource}?${stringify({filter: JSON.stringify(query)})}`;
         break;
       }
