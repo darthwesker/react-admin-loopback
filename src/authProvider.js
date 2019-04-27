@@ -1,4 +1,4 @@
-import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_CHECK, AUTH_ERROR } from 'react-admin';
+import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_CHECK, AUTH_ERROR, AUTH_GET_PERMISSIONS } from 'react-admin';
 import storage from './storage';
 
 export const authProvider = (loginApiUrl, noAccessPage = '/login') => {
@@ -40,6 +40,15 @@ export const authProvider = (loginApiUrl, noAccessPage = '/login') => {
         storage.remove('lbtoken');
         return Promise.reject({ redirectTo: noAccessPage });
       }
+    }
+    if (type === AUTH_GET_PERMISSIONS) {
+        const role = storage.load('lbtoken');
+        if (role && role.user.realm) {
+            return Promise.resolve(role.user.realm);
+        } else {
+            storage.remove('lbtoken');
+            return Promise.reject({redirecTo: noAccessPage });
+        }
     }
     return Promise.reject('Unknown method');
   };
